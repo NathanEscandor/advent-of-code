@@ -4,7 +4,7 @@ def get_depth_measurements():
         stripped = [int(s.strip()) for s in lines]
         return stripped
 
-def get_window_sums(window_size, measurements):
+def get_window_sums(measurements, window_size):
     windows = []
     for index in range(len(measurements)+1):
         if index+window_size <= len(measurements):
@@ -12,9 +12,7 @@ def get_window_sums(window_size, measurements):
             windows.append(window_sum)
     return windows
 
-
-
-def part_1(measurements):
+def get_increases(measurements):
     prev = None
     count = 0
     for depth_measurement in measurements:
@@ -24,15 +22,23 @@ def part_1(measurements):
 
         prev = depth_measurement
 
-    return count
+    return count    
 
-def part_2():
-    pass
 
-measurements = get_depth_measurements()
-increases = part_1(measurements)
-windows = get_window_sums(3, measurements)
-window_increases = part_1(windows)
+def part_1():
+    measurements = get_depth_measurements()
+    increases = get_increases(measurements)
+    return increases
+
+def part_2(window_size):
+    measurements = get_depth_measurements()
+    window_sums = get_window_sums(measurements, window_size)
+    window_increases = get_increases(window_sums)
+    return window_increases
+
+
+increases = part_1()
+window_increases = part_2(3)
+
 
 breakpoint()
-# print()
