@@ -1,12 +1,10 @@
 def get_depth_measurements():
     with open('puzzle_input.txt', 'r') as f:
         lines = f.readlines()
-        stripped = [s.strip() for s in lines]
+        stripped = [int(s.strip()) for s in lines]
         return stripped
 
 
-#Note: this produces off by 1 for some reason. (gives 1580, ans is 1581)
-#      not completely sure why that is. need to write tests.
 def part_1(measurements):
     prev = None
     count = 0
@@ -22,3 +20,5 @@ def part_1(measurements):
 
 measurements = get_depth_measurements()
 increases = part_1(measurements)
+
+print()
