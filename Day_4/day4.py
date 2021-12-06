@@ -1,4 +1,4 @@
-filename = 'test_input.txt'
+filename = 'puzzle_input.txt'
 
 def get_cleaned_lines():
     file_lines = []
@@ -23,8 +23,16 @@ def get_boards(cleaned_lines):
         else:
             board_row = [int(value) for value in line.split()]
             this_board.append(board_row)
+    boards.append(this_board)
     boards.remove([])
     return boards
+
+def flatten_board(board):
+    flat_board = []
+    for i in range(len(board)):
+        for j in range(len(board)):
+            flat_board.append(board[i][j])
+    return flat_board
 
 def empty_board():
     board = []
@@ -32,22 +40,44 @@ def empty_board():
         board.append([0, 0, 0, 0, 0])
     return board
 
-def is_row_win(dummy_board):
+def is_row_win(flat_board):
     for i in range(5):
-        if sum(dummy_board[i]) == 5:
-            return i
-    return False
-
-
-def is_column_win(dummy_board):
-    # [0][0], [1][0], [2][0]
-    for j in range(5):
         count = 0
-        for i in range(5):
-            count += dummy_board[i][j]
+        for j in range(5):
+            if flat_board[i+j] == 'x':
+                count += 1
         if count == 5:
-            return j
+            return True
     return False
+
+def is_column_win(flat_board):
+    for i in range(5):
+        count = 0
+        for j in range(5):
+            if flat_board[i+(5*j)] == 'x':
+                count += 1
+        if count == 5:
+            return True
+    return False
+
+def calculate_score(flat_board, draw):
+    total = 0
+    for item in flat_board:
+        if item != 'x':
+            total += item
+    return total * draw
+
+
+
+# def is_column_win(dummy_board):
+#     # [0][0], [1][0], [2][0]
+#     for j in range(5):
+#         count = 0
+#         for i in range(5):
+#             count += dummy_board[i][j]
+#         if count == 5:
+#             return j
+#     return False
 
 def col_win_data():
     db = empty_board()
@@ -67,22 +97,23 @@ cleaned_lines = get_cleaned_lines()
 draws = get_draws(cleaned_lines[0])
 boards = get_boards(cleaned_lines)
 dummy_boards = [empty_board() for board in boards]
+flat_boards = [flatten_board(board) for board in boards]
 
+count = 0
+final_score = 0
 for draw in draws:
-    for board in range(len(boards)):
-        for row in range(len(boards[board])):
-            for column in range(len(boards[board][row])):
-                if boards[board][row][column] == draw:
-                    dummy_boards[board][row][column] = 1
-        if is_row_win(boards[board]) != False:
-            break
-        if is_column_win(boards[board]) != False:
-            break
+    for board in flat_boards:
+        if draw in board:
+            board[board.index(draw)] = 'x'
+            count += 1
+            if is_row_win(board):
+                final_score = calculate_score(board, draw)
+                breakpoint()
+            elif is_column_win(board):
+                final_score = calculate_score(board, draw)
+                breakpoint()
 
-
-
-db = col_win_data()
-result = is_column_win(db)
+breakpoint()
 
 
 breakpoint()
